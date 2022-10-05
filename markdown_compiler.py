@@ -400,9 +400,8 @@ def compile_links(line):
         else: 
             linetwo += a
     return linetwo + linethree + sitelink + linefour + sitename + linefive
-
-    if moveon == False:
-        return wrongline    
+    # if moveon == False:
+    #     return wrongline    
         
 
 
