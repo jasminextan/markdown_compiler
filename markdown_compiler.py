@@ -91,8 +91,29 @@ def compile_italic_star(line):
     >>> compile_italic_star('*')
     '*'
     '''
-    return line
-
+    secondstar = False
+    firststar = False
+    starcheck = False
+    linetwo = ''
+    linethree = '<i>'
+    linefour = '</i>'
+    for c in line:
+        if c == '*':
+            starcheck = True
+        if firststar == True and starcheck == True:
+            linetwo += linefour
+            secondstar = True
+            firststar = False
+        elif firststar == False and starcheck == True:
+            linetwo += linethree
+            firststar = True
+            secondstar = False
+        if c!= '*':
+            linetwo += c
+        starcheck = False
+    if secondstar == False:
+        return (line)
+    return(linetwo)
 
 def compile_italic_underscore(line):
     '''
@@ -112,8 +133,29 @@ def compile_italic_underscore(line):
     >>> compile_italic_underscore('_')
     '_'
     '''
-    return line
-
+    secondstar = False
+    firststar = False
+    starcheck = False
+    linetwo = ''
+    linethree = '<i>'
+    linefour = '</i>'
+    for c in line:
+        if c == '_':
+            starcheck = True
+        if firststar == True and starcheck == True:
+            linetwo += linefour
+            secondstar = True
+            firststar = False
+        elif firststar == False and starcheck == True:
+            linetwo += linethree
+            firststar = True
+            secondstar = False
+        if c!= '_':
+            linetwo += c
+        starcheck = False
+    if secondstar == False:
+        return (line)
+    return(linetwo)
 
 def compile_strikethrough(line):
     '''
@@ -135,8 +177,31 @@ def compile_strikethrough(line):
     >>> compile_strikethrough('~~')
     '~~'
     '''
-    return line
-
+    secondstar = False
+    firststar = False
+    starcheck = False
+    linetwo = ''
+    linethree = '<ins>'
+    linefour = '</ins>'
+    x = 0
+    for c in line:
+        if c == '~':
+            starcheck = True
+            x += 1
+        if firststar == True and starcheck == True and x%2==0:
+            linetwo += linefour
+            secondstar = True
+            firststar = False
+        elif firststar == False and starcheck == True and x%2==0:
+            linetwo += linethree
+            firststar = True
+            secondstar = False
+        if c!= '~':
+            linetwo += c
+        starcheck = False
+    if secondstar == False:
+        return (line)
+    return(linetwo)
 
 def compile_bold_stars(line):
     '''
@@ -156,7 +221,31 @@ def compile_bold_stars(line):
     >>> compile_bold_stars('**')
     '**'
     '''
-    return line
+    secondstar = False
+    firststar = False
+    starcheck = False
+    linetwo = ''
+    linethree = '<b>'
+    linefour = '</b>'
+    x = 0
+    for c in line:
+        if c == '*':
+            starcheck = True
+            x += 1
+        if firststar == True and starcheck == True and x%2==0:
+            linetwo += linefour
+            secondstar = True
+            firststar = False
+        elif firststar == False and starcheck == True and x%2==0:
+            linetwo += linethree
+            firststar = True
+            secondstar = False
+        if c!= '*':
+            linetwo += c
+        starcheck = False
+    if secondstar == False:
+        return (line)
+    return(linetwo)
 
 
 def compile_bold_underscore(line):
@@ -177,7 +266,31 @@ def compile_bold_underscore(line):
     >>> compile_bold_underscore('__')
     '__'
     '''
-    return line
+    secondstar = False
+    firststar = False
+    starcheck = False
+    linetwo = ''
+    linethree = '<b>'
+    linefour = '</b>'
+    x = 0
+    for c in line:
+        if c == '_':
+            starcheck = True
+            x += 1
+        if firststar == True and starcheck == True and x%2==0:
+            linetwo += linefour
+            secondstar = True
+            firststar = False
+        elif firststar == False and starcheck == True and x%2==0:
+            linetwo += linethree
+            firststar = True
+            secondstar = False
+        if c!= '_':
+            linetwo += c
+        starcheck = False
+    if secondstar == False:
+        return (line)
+    return(linetwo)
 
 
 def compile_code_inline(line):
@@ -227,7 +340,70 @@ def compile_links(line):
     >>> compile_links('this is wrong: [course webpage](https://github.com/mikeizbicki/cmc-csci040')
     'this is wrong: [course webpage](https://github.com/mikeizbicki/cmc-csci040'
     '''
-    return line
+    moveon = False
+    sitename = ''
+    sitelink = ''
+    linetwo = ''
+    linethree = '<a href="'
+    linefour = '">'
+    linefive = '</a>'
+    startbracket = False
+    endbracket = False
+    startparenth = False
+    endparenth = False
+    wrongline = 'this is wrong:' + line
+    for c in line:
+        if c == ']':
+            x = True
+        if c == '(' and x == True:
+            moveon = True
+        else:
+            x = False
+    # for d in line:
+    #     if d == '[':
+    #         startbracket = True
+    #         while startbracket == True:
+    #             for b in line:
+    #                 if b == ']':
+    #                     endbracket = True
+    #                     startbracket = False   
+    #                     break 
+    #                 sitename += d
+    #     if d == '(':
+    #         startparenth = True
+    #         while startparenth == True:
+    #             for p in line:
+    #                 if p == ')':
+    #                     endparenth = True
+    #                     startparenth = False   
+    #                     break 
+    #                 sitelink += p
+    for a in line:
+        if a == '[':
+            startbracket = True
+            while startbracket == True:
+                for b in line:
+                    if b == ']':
+                        endbracket = True
+                        startbracket = False   
+                        break 
+                    sitename += b
+        elif a == '(':
+            startparenth = True
+            while startparenth == True:
+                for p in line:
+                    if p == ')':
+                        endparenth = True
+                        startparenth = False   
+                        break 
+                    sitelink += p
+        else: 
+            linetwo += a
+    return linetwo + linethree + sitelink + linefour + sitename + linefive
+
+    if moveon == False:
+        return wrongline    
+        
 
 
 def compile_images(line):
