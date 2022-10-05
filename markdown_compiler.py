@@ -340,50 +340,57 @@ def compile_links(line):
     >>> compile_links('this is wrong: [course webpage](https://github.com/mikeizbicki/cmc-csci040')
     'this is wrong: [course webpage](https://github.com/mikeizbicki/cmc-csci040'
     '''
-    # moveon = False
-    # sitename = ''
-    # sitelink = ''
-    # linetwo = ''
-    # linethree = '<a href="'
-    # linefour = '">'
-    # linefive = '</a>'
-    # startbracket = False
-    # endbracket = False
-    # startparenth = False
-    # endparenth = False
-    # wrongline = 'this is wrong:' + line
-    # for c in line:
-    #     if c == ']':
-    #         x = True
-    #     elif c == '(' and x == True:
-    #         moveon = True
-    #     else:
-    #         x = False
-    # for a in line:
-    #     if a == '[':
-    #         startbracket = True
-    #         while startbracket == True:
-    #             for b in line:
-    #                 if b == ']':
-    #                     endbracket = True
-    #                     startbracket = False   
-    #                     break 
-    #                 sitename += b
-    #     elif a == '(':
-    #         startparenth = True
-    #         while startparenth == True:
-    #             for p in line:
-    #                 if p == ')':
-    #                     endparenth = True
-    #                     startparenth = False   
-    #                     break 
-    #                 sitelink += p
-    #     else: 
-    #         linetwo += a
-    # return linetwo + linethree + sitelink + linefour + sitename + linefive
-    # # if moveon == False:
-    # #     return wrongline    
-        
+    moveon = False
+    sitename = ''
+    sitelink = ''
+    linetwo = ''
+    linethree = '<a href="'
+    linefour = '">'
+    linefive = '</a>'
+    linesix = ''
+    end = False
+    startbracket = False
+    endbracket = False
+    startparenth = False
+    endparenth = False
+    x = 0
+    for c in line:
+        if c == ']':
+            x = 2
+        if c == '(' and x == 1:
+            moveon = True
+        else:
+            x += -1
+    for z in line:
+        if z == '[':
+            break
+        linetwo += z
+    for x in line:
+        if x == ')':
+            end = True
+        elif end == True:
+            linesix += x
+    for p in line:
+        if p == ')':
+            endparenth = True
+        elif p == '(':
+            startparenth = True   
+        elif endparenth == False and startparenth == True:
+            sitelink += p
+    for b in line:
+        if b == ']':
+            endbracket = True
+        elif b == '[':
+            startbracket = True   
+        elif endbracket == False and startbracket == True:
+            sitename += b
+    if moveon == False:
+        return line  
+    if endparenth == False:
+        return line
+    if endbracket == False:
+        return line
+    return linetwo + linethree + sitelink + linefour + sitename + linefive + linesix
 
 
 def compile_images(line):
@@ -402,7 +409,69 @@ def compile_images(line):
     >>> compile_images('This is an image of Mike Izbicki: ![Mike Izbicki](https://avatars1.githubusercontent.com/u/1052630?v=2&s=460)')
     'This is an image of Mike Izbicki: <img src="https://avatars1.githubusercontent.com/u/1052630?v=2&s=460" alt="Mike Izbicki" />'
     '''
-    return line
+    moveon = False
+    sitename = ''
+    sitelink = ''
+    linetwo = ''
+    linethree = '<img src="'
+    linefour = '" alt="'
+    linefive = '" />'
+    linesix = ''
+    end = False
+    startbracket = False
+    endbracket = False
+    startparenth = False
+    endparenth = False
+    moveontwo = False
+    x = 0
+    for c in line:
+        if c == ']':
+            x = 2
+        if c == '(' and x == 1:
+            moveon = True
+        else:
+            x += -1
+    for g in line:
+        if g == '!':
+            x = 2
+        if g == '[' and x == 1:
+            moveontwo = True
+        else:
+            x += -1
+    for z in line:
+        if z == '!':
+            break
+        linetwo += z
+    for y in line:
+        if y == ')':
+            end = True
+        elif end == True:
+            linesix += y
+    for p in line:
+        if p == ')':
+            endparenth = True
+        elif p == '(':
+            startparenth = True   
+        elif endparenth == False and startparenth == True:
+            sitelink += p
+    for b in line:
+        if b == ']':
+            endbracket = True
+        elif b == '[':
+            startbracket = True
+        elif b == '!':
+            filler = 1   
+        elif endbracket == False and startbracket == True:
+            sitename += b
+    if moveon == False:
+        return line 
+    if moveontwo == False:
+        return line
+    if endparenth == False:
+        return line
+    if endbracket == False:
+        return line
+    return linetwo + linethree + sitelink + linefour + sitename + linefive + linesix
 
 
 ################################################################################
@@ -537,7 +606,6 @@ def compile_lines(text):
     </pre>
     <BLANKLINE>
     '''
-
     lines = text.split('\n')
     new_lines = []
     in_paragraph = False
@@ -550,7 +618,7 @@ def compile_lines(text):
         else:
             if line[0] != '#' and not in_paragraph:
                 in_paragraph = True
-                line = '<p>\n'+line
+                line = '<pre>\n'+line
             line = compile_headers(line)
             line = compile_strikethrough(line)
             line = compile_bold_stars(line)
@@ -563,6 +631,32 @@ def compile_lines(text):
         new_lines.append(line)
     new_text = '\n'.join(new_lines)
     return new_text
+
+    # lines = text.split('\n')
+    # new_lines = []
+    # in_paragraph = False
+    # for line in lines:
+    #     line = line.strip()
+    #     if line=='':
+    #         if in_paragraph:
+    #             line='</p>'
+    #             in_paragraph = False
+    #     else:
+    #         if line[0] != '#' and not in_paragraph:
+    #             in_paragraph = True
+    #             line = '<p>\n'+line
+    #         line = compile_headers(line)
+    #         line = compile_strikethrough(line)
+    #         line = compile_bold_stars(line)
+    #         line = compile_bold_underscore(line)
+    #         line = compile_italic_star(line)
+    #         line = compile_italic_underscore(line)
+    #         line = compile_code_inline(line)
+    #         line = compile_images(line)
+    #         line = compile_links(line)
+    #     new_lines.append(line)
+    # new_text = '\n'.join(new_lines)
+    # return new_text
 
 
 def markdown_to_html(markdown, add_css):
