@@ -340,27 +340,27 @@ def compile_links(line):
     >>> compile_links('this is wrong: [course webpage](https://github.com/mikeizbicki/cmc-csci040')
     'this is wrong: [course webpage](https://github.com/mikeizbicki/cmc-csci040'
     '''
-    moveon = False
-    sitename = ''
-    sitelink = ''
-    linetwo = ''
-    linethree = '<a href="'
-    linefour = '">'
-    linefive = '</a>'
-    startbracket = False
-    endbracket = False
-    startparenth = False
-    endparenth = False
-    wrongline = 'this is wrong:' + line
-    for c in line:
-        if c == ']':
-            x = True
-        if c == '(' and x == True:
-            moveon = True
-        else:
-            x = False
-    # for d in line:
-    #     if d == '[':
+    # moveon = False
+    # sitename = ''
+    # sitelink = ''
+    # linetwo = ''
+    # linethree = '<a href="'
+    # linefour = '">'
+    # linefive = '</a>'
+    # startbracket = False
+    # endbracket = False
+    # startparenth = False
+    # endparenth = False
+    # wrongline = 'this is wrong:' + line
+    # for c in line:
+    #     if c == ']':
+    #         x = True
+    #     elif c == '(' and x == True:
+    #         moveon = True
+    #     else:
+    #         x = False
+    # for a in line:
+    #     if a == '[':
     #         startbracket = True
     #         while startbracket == True:
     #             for b in line:
@@ -368,8 +368,8 @@ def compile_links(line):
     #                     endbracket = True
     #                     startbracket = False   
     #                     break 
-    #                 sitename += d
-    #     if d == '(':
+    #                 sitename += b
+    #     elif a == '(':
     #         startparenth = True
     #         while startparenth == True:
     #             for p in line:
@@ -378,30 +378,11 @@ def compile_links(line):
     #                     startparenth = False   
     #                     break 
     #                 sitelink += p
-    for a in line:
-        if a == '[':
-            startbracket = True
-            while startbracket == True:
-                for b in line:
-                    if b == ']':
-                        endbracket = True
-                        startbracket = False   
-                        break 
-                    sitename += b
-        elif a == '(':
-            startparenth = True
-            while startparenth == True:
-                for p in line:
-                    if p == ')':
-                        endparenth = True
-                        startparenth = False   
-                        break 
-                    sitelink += p
-        else: 
-            linetwo += a
-    return linetwo + linethree + sitelink + linefour + sitename + linefive
-    # if moveon == False:
-    #     return wrongline    
+    #     else: 
+    #         linetwo += a
+    # return linetwo + linethree + sitelink + linefour + sitename + linefive
+    # # if moveon == False:
+    # #     return wrongline    
         
 
 
