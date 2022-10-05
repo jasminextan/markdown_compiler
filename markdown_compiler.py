@@ -320,7 +320,33 @@ def compile_code_inline(line):
     >>> compile_code_inline('```python3')
     '```python3'
     '''
-    return line
+    secondstar = False
+    firststar = False
+    starcheck = False
+    linetwo = ''
+    linethree = '<code>'
+    linefour = '</code>'
+    for c in line:
+        if c == '`':
+            starcheck = True
+        if firststar == True and starcheck == True:
+            linetwo += linefour
+            secondstar = True
+            firststar = False
+        elif firststar == False and starcheck == True:
+            linetwo += linethree
+            firststar = True
+            secondstar = False
+        elif c == '<' and firststar == True and secondstar == False:
+            linetwo += '&lt;'
+        elif c == '>' and firststar == True and secondstar == False:
+            linetwo += '&gt;'
+        elif c!= '\'':
+            linetwo += c
+        starcheck = False
+    if secondstar == False:
+        return (line)
+    return(linetwo)
 
 
 def compile_links(line):
@@ -606,19 +632,29 @@ def compile_lines(text):
     </pre>
     <BLANKLINE>
     '''
+    firstpre = False
     lines = text.split('\n')
     new_lines = []
     in_paragraph = False
+    in_paragraphtwo = False
     for line in lines:
-        line = line.strip()
-        if line=='':
+        if line=='```' and firstpre == True:
+            line='</pre>'
+            firstpre = False
+            in_paragraphtwo = False
+        elif line == '```' and firstpre == False:
+            line = '<pre>'
+            in_paragraphtwo = True
+            firstpre = True
+        elif line=='':
             if in_paragraph:
                 line='</p>'
                 in_paragraph = False
-        else:
-            if line[0] != '#' and not in_paragraph:
+        elif not in_paragraphtwo:
+            if line[0] != '#' and not in_paragraph and not in_paragraphtwo:
                 in_paragraph = True
-                line = '<pre>\n'+line
+                line = '<p>\n'+line
+            line = line.strip()
             line = compile_headers(line)
             line = compile_strikethrough(line)
             line = compile_bold_stars(line)
@@ -631,33 +667,6 @@ def compile_lines(text):
         new_lines.append(line)
     new_text = '\n'.join(new_lines)
     return new_text
-
-    # lines = text.split('\n')
-    # new_lines = []
-    # in_paragraph = False
-    # for line in lines:
-    #     line = line.strip()
-    #     if line=='':
-    #         if in_paragraph:
-    #             line='</p>'
-    #             in_paragraph = False
-    #     else:
-    #         if line[0] != '#' and not in_paragraph:
-    #             in_paragraph = True
-    #             line = '<p>\n'+line
-    #         line = compile_headers(line)
-    #         line = compile_strikethrough(line)
-    #         line = compile_bold_stars(line)
-    #         line = compile_bold_underscore(line)
-    #         line = compile_italic_star(line)
-    #         line = compile_italic_underscore(line)
-    #         line = compile_code_inline(line)
-    #         line = compile_images(line)
-    #         line = compile_links(line)
-    #     new_lines.append(line)
-    # new_text = '\n'.join(new_lines)
-    # return new_text
-
 
 def markdown_to_html(markdown, add_css):
     '''
@@ -727,8 +736,22 @@ def minify(html):
     >>> minify('a\n\n\n\n\n\n\n\n\n\n\n\n\n\nb\n\n\n\n\n\n\n\n\n\n')
     'a b'
     '''
-    return html
-
+    htmltwo = ''
+    z = 0
+    htmlthree = []
+    for i in html:
+        if i == '\n':
+            filler = 1
+        elif i == ' ':
+            filler = 1
+        else:
+            htmlthree += i
+    for x in htmlthree:
+        z += 1
+        htmltwo += x
+        if z < len(htmlthree):
+            htmltwo += ' '
+    return htmltwo
 
 def convert_file(input_file, add_css):
     '''
