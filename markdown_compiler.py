@@ -58,8 +58,8 @@ def compile_headers(line):
         return line
     x=0
     linetwo = ''
-    hashtag = True
     for c in line:
+        hashtag = True
         if c == '#':
             x+=1
             hashtag = False
@@ -69,13 +69,6 @@ def compile_headers(line):
         linefour = '>'
         linefive = '</h'
     return(linethree + str(x) + linefour + linetwo + linefive + str(x) + linefour)
-    # for i in range (len(line)):
-    #     if line[i]=='#':
-    #         x+=1
-    #         hashtag = False
-    #     if hashtag == True:
-    #         linetwo += i
-    # return "'<h"+x+">"+linetwo+"</h"+x+">'"
 
 def compile_italic_star(line):
     '''
