@@ -752,20 +752,33 @@ def minify(html):
     'a b'
     '''
     htmltwo = ''
-    z = 0
     htmlthree = []
+    spacetracker = []
     for i in html:
         if i == '\n':
-            filler = 1
-        elif i == ' ':
-            filler = 1
+            htmlthree += ' '
         else:
             htmlthree += i
-    for x in htmlthree:
-        z += 1
-        htmltwo += x
-        if z < len(htmlthree):
-            htmltwo += ' '
+    for i in range(len(htmlthree)):
+        if htmlthree[i] == ' ' and htmlthree[i-1] == ' ':
+            spacetracker.append(i-1)
+    spacetracker.sort(reverse=True)
+    for x in spacetracker:
+        del htmlthree[x]
+    if len(htmlthree) == 0:
+        return htmltwo
+    if htmlthree[len(htmlthree)-1] == ' ' and htmlthree[0] == ' ':
+        for x in htmlthree[1:len(htmlthree)-1]:
+            htmltwo += x
+    elif htmlthree[0] == ' ':
+        for x in htmlthree[1:len(htmlthree)]:
+            htmltwo += x
+    elif htmlthree[len(htmlthree)-1] == ' ':
+        for x in htmlthree[0:len(htmlthree)-1]:
+            htmltwo += x
+    else:
+        for x in htmlthree:
+            htmltwo += x
     return htmltwo
 
 def convert_file(input_file, add_css):
