@@ -341,7 +341,7 @@ def compile_code_inline(line):
             linetwo += '&lt;'
         elif c == '>' and firststar == True and secondstar == False:
             linetwo += '&gt;'
-        elif c!= '\'':
+        elif c!= '`':
             linetwo += c
         starcheck = False
     if secondstar == False:
